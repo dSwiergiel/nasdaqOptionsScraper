@@ -42,7 +42,8 @@ let ArticleSchema = new Schema({
   headline: { type: String, unique: true },
   url: String,
   stocks: [{ symbol: String, text: String }],
-  scrapeDate: { type: String }
+  scrapeDate: { type: String },
+  scrapeDataStandard: { type: Number }
 });
 
 const ArticleModel = mongoose.model("Article", ArticleSchema);
@@ -53,19 +54,33 @@ module.exports = ArticleModel;
 const url = "https://www.nasdaq.com/options/";
 
 var articles = [];
+var lastScrapeDate = null;
 // scrapeLatest();
 /*
 Server REST Endpoints
 */
 router.route("/getArticles").get((req, res) => {
   ArticleModel.find((err, articles) => {
-    if (err){
+    if (err) {
       console.log(err);
     } else {
-      res.json(articles);
-      scrapeLatest();
-
-    } 
+      res.json(articles.sort(function(a, b) {
+        a = new Date(a.scrapeDataStandard);
+        b = new Date(b.scrapeDataStandard);
+        return a>b ? -1 : a<b ? 1 : 0;
+    }));
+    //   articles.sort(function(a, b) {
+    //     a = new Date(a.dateModified);
+    //     b = new Date(b.dateModified);
+    //     return a>b ? -1 : a<b ? 1 : 0;
+    // });
+      // only allow new scrape if its' never been done since server restart
+      // or if it has been at least 5 minutes since last scrape
+      if (lastScrapeDate == null || (moment(Date.now()).valueOf() - lastScrapeDate > 300000)) {
+        lastScrapeDate = moment(Date.now()).valueOf();
+        scrapeLatest();
+      }
+    }
   });
 });
 // ********************************************************************************
@@ -80,6 +95,7 @@ function Article(headline, url, stocks, text) {
   this.url = url;
   this.stocks = stocks;
   this.scrapeDate = moment(Date.now()).format("MM/DD/YY hh:mm A");
+  this.scrapeDataStandard = moment(Date.now()).valueOf();
 }
 
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
@@ -91,17 +107,26 @@ async function scrapeLatest() {
   const page = await browser.newPage();
 
   // goes to the initial nasdaq.com/options page
-  await page.goto(url, {
-    waitUntil: "domcontentloaded",
-    timeout: 3000000
-  });
+  await page
+    .goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: 30000
+    })
+    .catch(err => {
+      console.log("Nav time took to long");
+    });
 
   // gets all 30 headlines
-  var links = await page.evaluate(() => {
-    return Array.from(
-      document.querySelectorAll("#latest-news-headlines > ul > li")
-    ).map(res => res.innerHTML);
-  });
+  var links = await page
+    .evaluate(() => {
+      return Array.from(
+        document.querySelectorAll("#latest-news-headlines > ul > li")
+      ).map(res => res.innerHTML);
+    })
+    .catch(err => {
+      browser.close();
+      console.log(err);
+    });
 
   // filters headlines to ones that include "Notable" or "Noteworthy"
   for (let link of links) {
@@ -155,10 +180,16 @@ async function scrapeLatest() {
 
   // goes to each of the relevant articles and scraps needed data
   for (let article of articles) {
-    await page.goto(article.url, {
-      waitUntil: "domcontentloaded",
-      timeout: 3000000
-    });
+    await page
+      .goto(article.url, {
+        waitUntil: "domcontentloaded",
+        timeout: 30000
+      })
+      .catch(err => {
+        console.log("Nav time took to long");
+        browser.close();
+        return;
+      });
 
     // gets article text
     var articleText = await page.evaluate(() => {
@@ -182,12 +213,17 @@ async function scrapeLatest() {
 
     console.log(article);
 
+    // adds the article object to the database
     let a = new ArticleModel(article);
     a.save(function(err, a) {
       if (err) {
+        // error code 11000 is when it tried saving duplicate articles.
+        // This is fine since we can't know when there will be from the scrape, we just won't add them.
         if (err.code == 11000) {
         } else {
-          console.log(err)
+          browser.close();
+
+          console.log(err);
         }
       }
     });

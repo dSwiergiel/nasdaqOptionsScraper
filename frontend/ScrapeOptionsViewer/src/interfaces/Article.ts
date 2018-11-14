@@ -3,6 +3,7 @@ export interface IArticle {
     url : String;
     stocks : IStock[];
     scrapeDate : String;
+    scrapeDateStandard: number;
 }
 
 

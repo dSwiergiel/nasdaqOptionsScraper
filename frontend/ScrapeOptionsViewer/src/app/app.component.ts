@@ -20,8 +20,8 @@ export class AppComponent {
     this.appService.getArticles().subscribe(
       (response: IArticle[]) => {
         this.articles = response;
-        this.articlesMasterList = response;
-        console.log(this.articles);
+
+        this.articlesMasterList = this.articles;
         this.loading = false;
       },
       err => {

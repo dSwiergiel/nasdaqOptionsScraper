@@ -1,8 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+
 .cardShadow {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 body {
   background: #eee;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+label, .col-form-label {
+  color: #333!important;
+}
+fieldset {
+  margin-bottom: 0px!important;
+}
+p {
+  color: #333!important;
 }
