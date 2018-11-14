@@ -36,15 +36,18 @@ export class AppComponent {
       x.headline.toLocaleLowerCase().includes(e.toLocaleLowerCase())
     );
   }
-  filterSymbol(e: string) {
-    this.articles = this.articlesMasterList.filter(x => {
-      x.stocks.filter(s =>
-        s.symbol.toLocaleLowerCase().includes(e.toLocaleLowerCase())
-      );
-    });
-  }
+  // filterHeadline(e: string) {
+  //   this.articles = this.articlesMasterList.filter(x =>
+  //     x.scrapeDate.toLocaleLowerCase().includes(e.toLocaleLowerCase())
+  //   );
+  // }
+  // filterSymbol(e: string) {
+  //   this.articles = this.articlesMasterList.filter(x => {
+  //     x.stocks.filter(s =>
+  //       s.symbol.toLocaleLowerCase().includes(e.toLocaleLowerCase())
+  //     );
+  //   });
+  // }
 
-  refresh() {
-    this.articles = [];
-  }
+
 }

@@ -17,36 +17,42 @@
           >Headlines</label
         >
         <div class="col-sm-10">
-          <input
-            type="text"
-            class="form-control"
-            #headlineFilter
-            placeholder="Headlines"
-            (input)="filterHeadline($event.target.value)"
-          />
+          
+            <input
+              type="text"
+              class="form-control"
+              #headlineFilter
+              placeholder="Headlines"
+              (input)="filterHeadline($event.target.value)"
+            />
+         
         </div>
       </div>
       <div class="form-group row">
         <label for="inputEmail3" class="col-sm-2 col-form-label">Symbol</label>
         <div class="col-sm-10">
-          <input
-            type="text"
-            class="form-control"
-            id="inputEmail3"
-            (input)="filterSymbol($event.target.value)"
-            placeholder="Symbol"
-          />
+          
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmail3"
+              (input)="filterSymbol($event.target.value)"
+              placeholder="Symbol"
+            />
+         
         </div>
       </div>
       <div class="form-group row">
         <label for="inputEmail3" class="col-sm-2 col-form-label">Date</label>
         <div class="col-sm-10">
-          <input
-            type="email"
-            class="form-control"
-            id="inputEmail3"
-            placeholder="Date"
-          />
+          
+            <input
+              type="email"
+              class="form-control"
+              id="inputEmail3"
+              placeholder="Date"
+            />
+         
         </div>
       </div>
       <fieldset class="form-group">
@@ -91,17 +97,19 @@
     </form>
   </div>
 </div>
-<div *ngIf="articles.length == 0">
+<!--
+  <div *ngIf="articles?.length == 0">
 
-  <div style="height: 500px;">
+    <div style="height: 500px;">
+
+    </div>
+
+
 
   </div>
-
-
-
-</div>
-<div *ngIf="articles" class="container">
-  <div *ngFor="let article of articles" style="margin: 15px 0px 15px 0px">
+-->
+<div class="container">
+  <div *ngFor="let article of articles; index as i" style="margin: 15px 0px 15px 0px">
     <div class="card cardShadow">
       <div class="card-body">
         <h4 class="card-title">{{ article.headline }}</h4>
@@ -113,11 +121,12 @@
           <h5>{{ stock.symbol }}:</h5>
           <p>{{ stock.text }}</p>
         </div>
-        <!--
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
-        -->
+
+        <a href="{{article.url}}" class="card-link" target="_blank"
+          >View original article to read more</a
+        >
       </div>
     </div>
   </div>
 </div>
+
