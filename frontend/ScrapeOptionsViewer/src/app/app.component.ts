@@ -36,6 +36,11 @@ export class AppComponent {
       x.headline.toLocaleLowerCase().includes(e.toLocaleLowerCase())
     );
   }
+  filterDate(e: string) {
+    this.articles = this.articlesMasterList.filter(x =>
+      x.scrapeDate.toLocaleLowerCase().includes(e.toLocaleLowerCase())
+    );
+  }
   // filterHeadline(e: string) {
   //   this.articles = this.articlesMasterList.filter(x =>
   //     x.scrapeDate.toLocaleLowerCase().includes(e.toLocaleLowerCase())
