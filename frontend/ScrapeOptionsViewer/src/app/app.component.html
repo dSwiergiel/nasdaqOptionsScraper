@@ -1,0 +1,123 @@
+<!-- The content below is only a placeholder and can be replaced. -->
+<div style="text-align:center">
+  <!-- <h1>Welcome to {{ title }}!</h1> -->
+  <img
+    width="300"
+    alt="Angular Logo"
+    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
+  />
+</div>
+<div class="container">
+  <div class="card cardShadow">
+    <form class="card-body">
+      <h4>Filter Articles:</h4>
+      <hr />
+      <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label"
+          >Headlines</label
+        >
+        <div class="col-sm-10">
+          <input
+            type="text"
+            class="form-control"
+            #headlineFilter
+            placeholder="Headlines"
+            (input)="filterHeadline($event.target.value)"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Symbol</label>
+        <div class="col-sm-10">
+          <input
+            type="text"
+            class="form-control"
+            id="inputEmail3"
+            (input)="filterSymbol($event.target.value)"
+            placeholder="Symbol"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Date</label>
+        <div class="col-sm-10">
+          <input
+            type="email"
+            class="form-control"
+            id="inputEmail3"
+            placeholder="Date"
+          />
+        </div>
+      </div>
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0">Search type</legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="gridRadios"
+                id="gridRadios1"
+                value="option1"
+                checked
+              />
+              <label class="form-check-label" for="gridRadios1">
+                Quick search
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="gridRadios"
+                id="gridRadios2"
+                value="option2"
+              />
+              <label class="form-check-label" for="gridRadios2">
+                Full search
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <!--
+        <div class="form-group row">
+          <div class="col-sm-10">
+            <button type="button" class="btn btn-primary" (click)=refresh()>Search</button>
+          </div>
+        </div>
+      -->
+    </form>
+  </div>
+</div>
+<div *ngIf="articles.length == 0">
+
+  <div style="height: 500px;">
+
+  </div>
+
+
+
+</div>
+<div *ngIf="articles" class="container">
+  <div *ngFor="let article of articles" style="margin: 15px 0px 15px 0px">
+    <div class="card cardShadow">
+      <div class="card-body">
+        <h4 class="card-title">{{ article.headline }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Scraped: {{ article.scrapeDate }}
+        </h6>
+        <hr />
+        <div *ngFor="let stock of article.stocks">
+          <h5>{{ stock.symbol }}:</h5>
+          <p>{{ stock.text }}</p>
+        </div>
+        <!--
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        -->
+      </div>
+    </div>
+  </div>
+</div>
