@@ -18,7 +18,5 @@
     "mongoose": "^5.3.9",
     "puppeteer": "^1.9.0"
   },
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }
