@@ -1,6 +1,5 @@
 <!-- The content below is only a placeholder and can be replaced. -->
 <div style="text-align:center">
-  <!-- <h1>Welcome to {{ title }}!</h1> -->
   <img
     width="300"
     alt="Angular Logo"
@@ -113,17 +112,13 @@
     </form>
   </div>
 </div>
-<!--
-  <div *ngIf="articles?.length == 0">
 
-    <div style="height: 500px;">
-
-    </div>
-
-
-
+<div *ngIf="noArticlesFound" class="mt-5">
+  <div class="container h-400">
+    <p>TEST</p>
   </div>
--->
+</div>
+
 <div class="container">
   <div
     *ngFor="let article of articles; index as i"
@@ -131,7 +126,8 @@
   >
     <div class="card cardShadow">
       <div class="card-body">
-        <h4 class="card-title">{{ article.headline }}</h4>
+        <!-- <h4 class="card-title">{{ article.headline }}</h4> -->
+        <h4 class="">{{ article.headline }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">
           Scraped: {{ article.scrapeDate }}
         </h6>
@@ -141,7 +137,10 @@
           <p>{{ stock.text }}</p>
         </div>
 
-        <a href="{{article.url}}" class="btn btn-outline-primary btn-sm pull-right" target="_blank"
+        <a
+          href="{{article.url}}"
+          class="btn btn-outline-primary btn-sm pull-right"
+          target="_blank"
           >View original article</a
         >
       </div>

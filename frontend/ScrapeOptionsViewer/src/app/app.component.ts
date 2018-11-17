@@ -15,6 +15,7 @@ export class AppComponent {
   articlesMasterList: IArticle[];
   apiError: boolean = false;
   loading: boolean = true;
+  noArticlesFound: boolean = false;
 
   constructor(private appService: AppService) {
     this.appService.getArticles().subscribe(
@@ -35,11 +36,21 @@ export class AppComponent {
     this.articles = this.articlesMasterList.filter(x =>
       x.headline.toLocaleLowerCase().includes(e.toLocaleLowerCase())
     );
+    if(this.articles.length == 0){
+      this.noArticlesFound = true;
+    } else {
+      this.noArticlesFound = false;
+    }
   }
   filterDate(e: string) {
     this.articles = this.articlesMasterList.filter(x =>
       x.scrapeDate.toLocaleLowerCase().includes(e.toLocaleLowerCase())
     );
+    if(this.articles.length == 0){
+      this.noArticlesFound = true;
+    } else {
+      this.noArticlesFound = false;
+    }
   }
   // filterHeadline(e: string) {
   //   this.articles = this.articlesMasterList.filter(x =>
