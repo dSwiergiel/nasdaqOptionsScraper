@@ -9,14 +9,11 @@ body {
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 
-label, .col-form-label {
-  color: #333!important;
+label, .col-form-label, p  {
+  color: #343a40!important;
 }
 fieldset {
   margin-bottom: 0px!important;
-}
-p {
-  color: #333!important;
 }

@@ -1,0 +1,150 @@
+<app-navbar></app-navbar>
+
+<!-- <div style="text-align:center">
+  <img
+    width="300"
+    alt="Angular Logo"
+    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
+  />
+</div> -->
+<div class="container mt-5">
+    <div class="card cardShadow">
+      <form class="card-body">
+        <h4>Filter Articles:</h4>
+        <hr />
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-md-2 col-form-label"
+            >Headlines</label
+          >
+          <div class="col-md-10">
+            <input
+              type="text"
+              class="form-control"
+              #headlineFilter
+              placeholder="Headlines"
+              (input)="filterHeadline($event.target.value)"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-md-2 col-form-label">Symbol</label>
+          <div class="col-md-10">
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmail3"
+              (input)="filterSymbol($event.target.value)"
+              placeholder="Symbol"
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-md-2 col-form-label">Date</label>
+          <div class="col-md-10">
+            <input
+              type="email"
+              class="form-control"
+              id="inputEmail3"
+              placeholder="Date"
+              (input)="filterDate($event.target.value)"
+            />
+          </div>
+        </div>
+  
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-md-2 pt-0">Search type</legend>
+            <div class="col-md-10">
+              <div class="form-group">
+                <div class="custom-control custom-radio">
+                  <input
+                    type="radio"
+                    id="customRadio1"
+                    name="customRadio"
+                    class="custom-control-input"
+                    checked=""
+                  />
+                  <label class="custom-control-label" for="customRadio1"
+                    >Quick search</label
+                  >
+                </div>
+                <div class="custom-control custom-radio">
+                  <input
+                    type="radio"
+                    id="customRadio2"
+                    name="customRadio"
+                    class="custom-control-input"
+                  />
+                  <label class="custom-control-label" for="customRadio2"
+                    >Full search</label
+                  >
+                </div>
+              </div>
+              <!--
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gridRadios"
+                    id="gridRadios1"
+                    value="option1"
+                    checked
+                  />
+                  <label class="form-check-label" for="gridRadios1">
+                    Quick search
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gridRadios"
+                    id="gridRadios2"
+                    value="option2"
+                  />
+                  <label class="form-check-label" for="gridRadios2">
+                    Full search
+                  </label>
+                </div>
+              -->
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  
+  <div *ngIf="noArticlesFound" class="mt-5 mb-5">
+    <div class="container h-100">
+      <p>TEST</p>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div
+      *ngFor="let article of articles; index as i"
+      style="margin: 15px 0px 15px 0px"
+    >
+      <div class="card cardShadow">
+        <div class="card-body">
+          <!-- <h4 class="card-title">{{ article.headline }}</h4> -->
+          <h4 class="">{{ article.headline }}</h4>
+          <h6 class="card-subtitle mb-2 text-muted">
+            Scraped: {{ article.scrapeDate }}
+          </h6>
+          <hr />
+          <div *ngFor="let stock of article.stocks">
+            <h5>{{ stock.symbol }}:</h5>
+            <p>{{ stock.text }}</p>
+          </div>
+  
+          <a
+            href="{{article.url}}"
+            class="btn btn-outline-primary btn-sm pull-right"
+            target="_blank"
+            >View original article</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
