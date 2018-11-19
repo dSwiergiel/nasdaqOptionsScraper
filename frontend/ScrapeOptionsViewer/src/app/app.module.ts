@@ -22,7 +22,7 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes, { useHash: false, scrollPositionRestoration: 'enabled', enableTracing: true})
+    RouterModule.forRoot(routes, { useHash: false, scrollPositionRestoration: 'enabled'})
   ],
   exports: [
     RouterModule

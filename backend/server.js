@@ -64,21 +64,53 @@ router.route("/getArticles").get((req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.json(articles.sort(function(a, b) {
-        a = new Date(a.scrapeDataStandard);
-        b = new Date(b.scrapeDataStandard);
-        return a>b ? -1 : a<b ? 1 : 0;
-    }));
-    //   articles.sort(function(a, b) {
-    //     a = new Date(a.dateModified);
-    //     b = new Date(b.dateModified);
-    //     return a>b ? -1 : a<b ? 1 : 0;
-    // });
+      res.json(
+        articles.sort(function(a, b) {
+          a = new Date(a.scrapeDataStandard);
+          b = new Date(b.scrapeDataStandard);
+          return a > b ? -1 : a < b ? 1 : 0;
+        })
+      );
       // only allow new scrape if its' never been done since server restart
       // or if it has been at least 5 minutes since last scrape
-      if (lastScrapeDate == null || (moment(Date.now()).valueOf() - lastScrapeDate > 300000)) {
-        lastScrapeDate = moment(Date.now()).valueOf();
+      if (
+        lastScrapeDate == null ||
+        moment(Date.now()).valueOf() - lastScrapeDate > 300000
+      ) {
         scrapeLatest();
+      }
+    }
+  });
+});
+
+router.route("/getNewArticles").get((req, res) => {
+  ArticleModel.find((err, articles) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // only allow new scrape if its' never been done since server restart
+      // or if it has been at least 5 minutes since last scrape
+      if (
+        lastScrapeDate == null ||
+        moment(Date.now()).valueOf() - lastScrapeDate > 300000
+      ) {
+        scrapeLatest().then(() => {
+          res.json(
+            articles.sort(function(a, b) {
+              a = new Date(a.scrapeDataStandard);
+              b = new Date(b.scrapeDataStandard);
+              return a > b ? -1 : a < b ? 1 : 0;
+            })
+          );
+        });
+      } else {
+        res.json(
+          articles.sort(function(a, b) {
+            a = new Date(a.scrapeDataStandard);
+            b = new Date(b.scrapeDataStandard);
+            return a > b ? -1 : a < b ? 1 : 0;
+          })
+        );
       }
     }
   });
@@ -105,6 +137,9 @@ async function scrapeLatest() {
   console.log("\n-- Web scrape started --");
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
+
+  lastScrapeDate = moment(Date.now()).valueOf();
+
 
   // goes to the initial nasdaq.com/options page
   await page

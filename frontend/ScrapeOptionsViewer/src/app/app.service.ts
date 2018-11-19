@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 // import { HttpClient } from 'selenium-webdriver/http';
 import { Observable, EMPTY, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
@@ -14,6 +14,14 @@ export class AppService {
 
   getArticles() {
     return this.httpClient.get(this.apiUrl + "/getArticles/").pipe(
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+
+  getNewArticles() {
+    return this.httpClient.get(this.apiUrl + "/getNewArticles/").pipe(
       catchError(err => {
         return throwError(err);
       })
