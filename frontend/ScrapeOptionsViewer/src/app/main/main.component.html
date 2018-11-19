@@ -15,9 +15,7 @@
       <h4>Filter Articles:</h4>
       <hr />
       <div class="form-group row">
-        <label for="" class="col-md-2 col-form-label"
-          >Headlines</label
-        >
+        <label for="" class="col-md-2 col-form-label">Headlines</label>
         <div class="col-md-10">
           <input
             type="text"
@@ -83,7 +81,16 @@
             </div>
           </div>
           <div class="col-md-5">
-            THIS IS A TEST
+            <div *ngIf="fetchingScrape">
+              New scrape has started, in the mean time feel free to search what
+              has already been scraped.
+            </div>
+            <div *ngIf="alreadyScraped">
+              Results are up to date. A scrape has already been completed within the last 5 minutes.
+            </div>
+            <div *ngIf="finishedScrape">
+                Scrape complete! Latest results are below.
+              </div>
           </div>
         </div>
       </fieldset>
@@ -92,7 +99,9 @@
 </div>
 
 <div *ngIf="noArticlesFound" class="mt-5 mb-5">
-  <div class="container h-100"><h3 class="text-center">No articles found</h3></div>
+  <div class="container h-100">
+    <h3 class="text-center">No articles found</h3>
+  </div>
 </div>
 
 <div class="container">

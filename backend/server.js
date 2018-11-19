@@ -28,7 +28,6 @@ var db = mongoose.connect(
 );
 
 const connection = mongoose.connection;
-const dbCollection = db.collections;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
@@ -45,9 +44,16 @@ let ArticleSchema = new Schema({
   scrapeDate: { type: String },
   scrapeDataStandard: { type: Number }
 });
-
 const ArticleModel = mongoose.model("Article", ArticleSchema);
 module.exports = ArticleModel;
+// ---- NOTE: LOGIN WAS JUST FOR DEMONSTRATION PURPOSES. -----
+// ---- NEVER EVER EVER STORE PLAIN TEXT PASSWORDS IN PRODUCTION APPLICATIONS!!!!!! -----
+let UserSchema = new Schema({
+  username: { type: String, unique: true },
+  password: {}
+});
+const UserModel = mongoose.model("User", UserSchema);
+module.exports = UserModel;
 // ********************************************************************************
 
 // Scrape URL
@@ -83,13 +89,14 @@ router.route("/getArticles").get((req, res) => {
   });
 });
 
+// for full search which includes results from current scrape
 router.route("/getNewArticles").get((req, res) => {
   ArticleModel.find((err, articles) => {
     if (err) {
       console.log(err);
     } else {
       // only allow new scrape if its' never been done since server restart
-      // or if it has been at least 5 minutes since last scrape
+      // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
       if (
         lastScrapeDate == null ||
         moment(Date.now()).valueOf() - lastScrapeDate > 300000
@@ -104,22 +111,43 @@ router.route("/getNewArticles").get((req, res) => {
           );
         });
       } else {
-        res.json(
-          articles.sort(function(a, b) {
-            a = new Date(a.scrapeDataStandard);
-            b = new Date(b.scrapeDataStandard);
-            return a > b ? -1 : a < b ? 1 : 0;
-          })
-        );
+        let emptyArray = [];
+        res.json(emptyArray);
+        // res.json(
+        //   articles.sort(function(a, b) {
+        //     a = new Date(a.scrapeDataStandard);
+        //     b = new Date(b.scrapeDataStandard);
+        //     return a > b ? -1 : a < b ? 1 : 0;
+        //   })
+        // );
       }
     }
   });
 });
-// ********************************************************************************
+
+// NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
+router.route("/loginUser").post((req, res) => {
+  UserModel.findOne({'username': req.body.username, 'password': req.body.password}, (err, user) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (user) {
+        res.json("Success!");
+      } else {
+        res.json("Username or password is invalid!");
+      }
+    }
+  });
+});
 
 app.use("/", router);
 
 app.listen(port, () => console.log("Express server running on port", port));
+// ********************************************************************************
+
+/*
+Scrape and Helper functions
+*/
 
 // pseudo constructor for Article objects
 function Article(headline, url, stocks, text) {
@@ -139,7 +167,6 @@ async function scrapeLatest() {
   const page = await browser.newPage();
 
   lastScrapeDate = moment(Date.now()).valueOf();
-
 
   // goes to the initial nasdaq.com/options page
   await page

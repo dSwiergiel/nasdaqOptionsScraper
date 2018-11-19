@@ -8,6 +8,9 @@ import { catchError, map, tap } from "rxjs/operators";
 })
 export class AppService {
   private apiUrl: string;
+  userAuthenticated: Boolean = false;
+
+  
   constructor(private httpClient: HttpClient) {
     this.apiUrl = "http://localhost:4000";
   }
@@ -18,6 +21,20 @@ export class AppService {
         return throwError(err);
       })
     );
+  }
+
+  loginUser(body){
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this.httpClient.post(this.apiUrl + '/loginUser/', body, httpOptions).pipe(
+      catchError(err => {
+        return throwError(err);
+      })
+    )
   }
 
   getNewArticles() {

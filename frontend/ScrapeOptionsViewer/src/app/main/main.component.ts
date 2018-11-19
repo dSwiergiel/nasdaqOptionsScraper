@@ -16,6 +16,9 @@ export class MainComponent implements OnInit {
   apiError: boolean = false;
   loading: boolean = true;
   noArticlesFound: boolean = false;
+  fetchingScrape: boolean = false;
+  alreadyScraped: boolean = false;
+  finishedScrape: boolean = false;
 
   constructor(private appService: AppService) {
     this.appService.getArticles().subscribe(
@@ -34,17 +37,28 @@ export class MainComponent implements OnInit {
   ngOnInit() {}
 
   getNewArticles() {
-    console.log('Fetching new articles...')
+    console.log("Fetching new articles...");
+    this.fetchingScrape = true;
+    this.alreadyScraped = false;
     this.appService.getNewArticles().subscribe(
       (response: IArticle[]) => {
-        this.articles = response;
-        console.log('Received new articles.')
-        this.articlesMasterList = this.articles;
+        if (response.length == 0) {
+          this.alreadyScraped = true;
+        } else {
+          this.articles = response;
+          console.log("Received new articles.");
+          this.articlesMasterList = this.articles;
+          this.alreadyScraped = false;
+          this.finishedScrape = true;
+        }
+        this.fetchingScrape = false;
         this.loading = false;
       },
       err => {
         this.apiError = true;
         this.loading = false;
+        this.alreadyScraped = false;
+        this.fetchingScrape = false;
       }
     );
   }
