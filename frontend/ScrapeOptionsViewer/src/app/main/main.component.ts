@@ -111,6 +111,25 @@ export class MainComponent implements OnInit {
     new Angular5Csv(this.csvData, "articles", options);
   }
 
+  print(): void {
+    let printContents, popupWin;
+    printContents = document.getElementById("articleContainer").innerHTML;
+    popupWin = window.open("", "_blank", "top=0,left=0,height=100%,width=auto");
+    popupWin.document.open();
+    popupWin.document.write(`
+      <html>
+        <head>
+          <title>Print tab</title>
+          <style>
+          //........Customized style.......
+          </style>
+        </head>
+    <body onload="window.print();window.close()">${printContents}</body>
+      </html>`);
+
+    popupWin.document.close();
+  }
+
   async exportPDF() {
     this.generatingPDF = true;
     let doc = new jsPDF("p", "mm", "a4");
@@ -132,7 +151,6 @@ export class MainComponent implements OnInit {
     this.generatingPDF = false;
     await doc.save("articles.pdf");
   }
-
 
   filterHeadline(e: string) {
     this.articles = this.articlesMasterList.filter(x =>
