@@ -249,7 +249,7 @@ async function scrapeLatest() {
         timeout: 30000
       })
       .catch(err => {
-        console.log("Nav time took to long");
+        console.log("Nav time took too long");
         browser.close();
         return;
       });
