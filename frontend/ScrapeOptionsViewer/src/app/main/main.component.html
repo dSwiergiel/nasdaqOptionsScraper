@@ -151,14 +151,14 @@
             <div *ngIf="alreadyScraped" class=" mt-2">
               <p style="margin-bottom: 0px;">
                 Results are up to date. A scrape was last performed
-                within the last 5 minutes.
+                within the past 5 minutes.
               </p>
             </div>
             <div
               *ngIf="finishedScrape"
               class=" d-flex align-items-center h-100"
             >
-              <p>Scrape complete! Latest results are below.</p>
+              <p>Scrape complete! Latest results are shown below.</p>
             </div>
 
             <div *ngIf="generatingPDF" class=" mt-2">
