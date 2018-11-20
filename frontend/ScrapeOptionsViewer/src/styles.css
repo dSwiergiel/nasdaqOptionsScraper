@@ -17,3 +17,16 @@ label, .col-form-label, p  {
 fieldset {
   margin-bottom: 0px!important;
 }
+.navbar{
+  padding: 1rem 1rem;
+}
+.exportButton {
+  float: right;
+}
+
+@media(max-width: 350px){
+  .exportButton {
+    margin-top: 10px;
+    float: none;
+  }
+}

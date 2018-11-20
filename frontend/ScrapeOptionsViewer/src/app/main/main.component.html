@@ -9,10 +9,61 @@
     />
   </div>
 -->
+
+<div class="modal" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Export Data</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Export data as either a CSV or PDF file</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-primary w-50"
+          data-dismiss="modal"
+          (click)="exportPDF()"
+        >
+          PDF
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary w-50"
+          data-dismiss="modal"
+          (click)="exportCSV()"
+        >
+          CSV
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container mt-4">
   <div class="card cardShadow">
     <form class="card-body">
-      <h4>Filter Articles:</h4>
+      <h4 style="margin-bottom: 0px; margin-top: 5px; display: inline-block">
+        Filter Articles:
+      </h4>
+      <button
+        class="btn btn-outline-primary btn-sm exportButton"
+        style="display: inline-block"
+        data-toggle="modal"
+        data-target="#modal"
+      >
+        Export
+      </button>
+      <div class="clearfix"></div>
       <hr />
       <div class="form-group row">
         <label for="" class="col-md-2 col-form-label">Headlines</label>
@@ -53,7 +104,7 @@
         <div class="row">
           <legend class="col-form-label col-md-2 pt-0">Search type</legend>
           <div class="col-md-3">
-            <div class="form-group">
+            <div class="form-group mt-2">
               <div class="custom-control custom-radio">
                 <input
                   type="radio"
@@ -80,17 +131,49 @@
               </div>
             </div>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-7">
             <div *ngIf="fetchingScrape">
-              New scrape has started, in the mean time feel free to search what
-              has already been scraped.
-            </div>
-            <div *ngIf="alreadyScraped">
-              Results are up to date. A scrape has already been completed within the last 5 minutes.
-            </div>
-            <div *ngIf="finishedScrape">
-                Scrape complete! Latest results are below.
+              <p style="margin-bottom: 0px;">
+                New scrape has started, in the mean time feel free to search
+                what has already been scraped.
+              </p>
+              <div class="progress mt-2 ">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  style="width: 75%"
+                ></div>
               </div>
+            </div>
+            <div *ngIf="alreadyScraped" class=" mt-2">
+              <p style="margin-bottom: 0px;">
+                Results are up to date. A scrape has already been completed
+                within the last 5 minutes.
+              </p>
+            </div>
+            <div
+              *ngIf="finishedScrape"
+              class=" d-flex align-items-center h-100"
+            >
+              <p>Scrape complete! Latest results are below.</p>
+            </div>
+
+            <div *ngIf="generatingPDF" class=" mt-2">
+              <p>Generating PDF. This may take some time.</p>
+              <div class="progress mt-2 ">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  style="width: 100%"
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
       </fieldset>
@@ -109,7 +192,7 @@
     *ngFor="let article of articles; index as i"
     style="margin: 15px 0px 15px 0px"
   >
-    <div class="card cardShadow">
+    <div class="card cardShadow" id="article{{i}}">
       <div class="card-body">
         <!-- <h4 class="card-title">{{ article.headline }}</h4> -->
         <h4 class="">{{ article.headline }}</h4>

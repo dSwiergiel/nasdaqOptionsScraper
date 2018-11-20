@@ -8,6 +8,9 @@ import { LoginComponent } from "./login/login.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { MainComponent } from "./main/main.component";
 import { AppService } from "./app.service";
+import { Angular2CsvModule } from 'angular2-csv';
+
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private router: Router, private appService: AppService) {}
@@ -27,6 +30,7 @@ export class AuthGuard implements CanActivate {
 
 const routes: Routes = [
   { path: "articles", component: MainComponent, canActivate: [AuthGuard] },
+  // { path: "articles", component: MainComponent },
   { path: "login", component: LoginComponent },
   { path: "**", component: LoginComponent },
   { path: "", component: LoginComponent }
@@ -39,6 +43,7 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    Angular2CsvModule,
     RouterModule.forRoot(routes, {
       useHash: false,
       scrollPositionRestoration: "enabled"

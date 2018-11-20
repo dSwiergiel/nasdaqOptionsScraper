@@ -126,6 +126,8 @@ router.route("/getNewArticles").get((req, res) => {
 });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
+// LIKE SERIOUSLY, THIS IS A REALLY BAD WAS TO DO LOGIN AND AUTHENTICATION. 
+// NEVER STORE PLAIN TEXT OR SEND PLAIN TEXT FOR CREDENTIALS!!!!!!!
 router.route("/loginUser").post((req, res) => {
   UserModel.findOne({'username': req.body.username, 'password': req.body.password}, (err, user) => {
     if (err) {
