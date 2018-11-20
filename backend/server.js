@@ -34,7 +34,7 @@ connection.once("open", () => {
 // ********************************************************************************
 
 /*
-Database Model Schema
+Database Model Schemas
 */
 let ArticleSchema = new Schema({
   // headline is our PK for better or for worse. This is to prevent dups
@@ -46,6 +46,7 @@ let ArticleSchema = new Schema({
 });
 const ArticleModel = mongoose.model("Article", ArticleSchema);
 module.exports = ArticleModel;
+
 // ---- NOTE: LOGIN WAS JUST FOR DEMONSTRATION PURPOSES. -----
 // ---- NEVER EVER EVER STORE PLAIN TEXT PASSWORDS IN PRODUCTION APPLICATIONS!!!!!! -----
 let UserSchema = new Schema({
@@ -71,6 +72,7 @@ router.route("/getArticles").get((req, res) => {
       console.log(err);
     } else {
       res.json(
+        // sort date from newest to oldest
         articles.sort(function(a, b) {
           a = new Date(a.scrapeDataStandard);
           b = new Date(b.scrapeDataStandard);
@@ -103,6 +105,7 @@ router.route("/getNewArticles").get((req, res) => {
       ) {
         scrapeLatest().then(() => {
           res.json(
+            // sort date from newest to oldest
             articles.sort(function(a, b) {
               a = new Date(a.scrapeDataStandard);
               b = new Date(b.scrapeDataStandard);
@@ -110,36 +113,32 @@ router.route("/getNewArticles").get((req, res) => {
             })
           );
         });
-      } else {
+      } else { // if scrape has been done recently, send empty array since database was fetched on page load. 
         let emptyArray = [];
         res.json(emptyArray);
-        // res.json(
-        //   articles.sort(function(a, b) {
-        //     a = new Date(a.scrapeDataStandard);
-        //     b = new Date(b.scrapeDataStandard);
-        //     return a > b ? -1 : a < b ? 1 : 0;
-        //   })
-        // );
       }
     }
   });
 });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
-// LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION. 
+// LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION.
 // NEVER STORE PLAIN TEXT OR SEND PLAIN TEXT FOR CREDENTIALS!!!!!!!
 router.route("/loginUser").post((req, res) => {
-  UserModel.findOne({'username': req.body.username, 'password': req.body.password}, (err, user) => {
-    if (err) {
-      console.log(err);
-    } else {
-      if (user) {
-        res.json("Success!");
+  UserModel.findOne(
+    { username: req.body.username, password: req.body.password },
+    (err, user) => {
+      if (err) {
+        console.log(err);
       } else {
-        res.json("Username or password is invalid!");
+        if (user) {
+          res.json("Success!");
+        } else {
+          res.json("Username or password is invalid!");
+        }
       }
     }
-  });
+  );
 });
 
 app.use("/", router);
