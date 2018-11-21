@@ -23,7 +23,14 @@ fieldset {
 .exportButton {
   float: right;
 }
-
+.userAlertContainer{
+  margin-top: 0px
+}
+@media(max-width: 960px){
+  .userAlertContainer{
+    margin-top: 10px
+  }
+}
 @media(max-width: 350px){
   .exportButton {
     margin-top: 10px;
