@@ -30,7 +30,6 @@ export class MainComponent implements OnInit {
     this.appService.getArticles().subscribe(
       (response: IArticle[]) => {
         this.articles = response;
-        console.log(this.articles)
 
         this.articlesMasterList = this.articles;
         this.loading = false;

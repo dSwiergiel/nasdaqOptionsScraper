@@ -27,8 +27,10 @@ Database Connection
 //   { useNewUrlParser: true }
 // );
 
+var config = require('./config.js');
+
 var db = mongoose.connect(
-  "mongodb://dswiergiel:badpass123@ds135514.mlab.com:35514/nasdaq-articles-scrape-db",
+  "mongodb://" + config.username + ":" + config.password + "@ds135514.mlab.com:35514/nasdaq-articles-scrape-db",
   { useNewUrlParser: true }
 );
 
