@@ -100,17 +100,16 @@ router.route("/getArticles").get((req, res) => {
 
 // for full search which includes results from current scrape
 router.route("/getNewArticles").get((req, res) => {
-  ArticleModel.find((err, articles) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // only allow new scrape if its' never been done since server restart
-      // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
-      if (
-        lastScrapeDate == null ||
-        moment(Date.now()).valueOf() - lastScrapeDate > 300000
-      ) {
-        scrapeLatest().then(() => {
+  // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
+  if (
+    lastScrapeDate == null ||
+    moment(Date.now()).valueOf() - lastScrapeDate > 300000
+  ) {
+    scrapeLatest().then(() => {
+      ArticleModel.find((err, articles) => {
+        if (err) {
+          console.log(err);
+        } else {
           res.json(
             // sort date from newest to oldest
             articles.sort(function(a, b) {
@@ -119,15 +118,45 @@ router.route("/getNewArticles").get((req, res) => {
               return a > b ? -1 : a < b ? 1 : 0;
             })
           );
-        });
-      } else {
-        // if scrape has been done recently, send empty array since database was fetched on page load.
-        let emptyArray = [];
-        res.json(emptyArray);
-      }
-    }
-  });
+        }
+      });
+    });
+  } else {
+    // if scrape has been done recently, send empty array since database was fetched on page load.
+    let emptyArray = [];
+    res.json(emptyArray);
+  }
 });
+// // for full search which includes results from current scrape
+// router.route("/getNewArticles").get((req, res) => {
+//   ArticleModel.find((err, articles) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       // only allow new scrape if its' never been done since server restart
+//       // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
+//       if (
+//         lastScrapeDate == null ||
+//         moment(Date.now()).valueOf() - lastScrapeDate > 300000
+//       ) {
+//         scrapeLatest().then(() => {
+//           res.json(
+//             // sort date from newest to oldest
+//             articles.sort(function(a, b) {
+//               a = new Date(a.scrapeDataStandard);
+//               b = new Date(b.scrapeDataStandard);
+//               return a > b ? -1 : a < b ? 1 : 0;
+//             })
+//           );
+//         });
+//       } else {
+//         // if scrape has been done recently, send empty array since database was fetched on page load.
+//         let emptyArray = [];
+//         res.json(emptyArray);
+//       }
+//     }
+//   });
+// });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
 // LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION.
@@ -148,8 +177,8 @@ router.route("/loginUser").post((req, res) => {
     }
   );
 });
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname + 'dist/ScrapeOptionsViewer/index.html'));
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname + "dist/ScrapeOptionsViewer/index.html"));
   // res.send('THIS IS A TEST')
 });
 app.use("/", router);
@@ -176,7 +205,10 @@ async function scrapeLatest() {
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
   console.log("\n-- Web scrape started --");
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox']});
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox"]
+  });
   const page = await browser.newPage();
 
   lastScrapeDate = moment(Date.now()).valueOf();
