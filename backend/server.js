@@ -148,12 +148,13 @@ router.route("/loginUser").post((req, res) => {
     }
   );
 });
-
+app.route('/', function(req, res) {
+  // res.sendFile(path.join(__dirname + 'dist/index.html'));
+  res.send('THIS IS A TEST');
+});
 app.use("/", router);
 // viewed at http://localhost:8080
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname + '/dist/index.html'));
-});
+
 app.listen(port, () => console.log("Express server running on port", port));
 // ********************************************************************************
 
