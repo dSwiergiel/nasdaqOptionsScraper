@@ -23,7 +23,7 @@ export class AppService {
     @Inject(SESSION_STORAGE) private storage: InMemoryStorageService
   ) {
     // this.apiUrl = "http://localhost:4000";
-    this.apiUrl = "192.241.129.214";
+    this.apiUrl = "http://192.241.129.214:4000";
   }
 
   getArticles() {
