@@ -3,7 +3,10 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 // import { HttpClient } from 'selenium-webdriver/http';
 import { Observable, EMPTY, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
-import { SESSION_STORAGE, InMemoryStorageService } from "angular-webstorage-service";
+import {
+  SESSION_STORAGE,
+  InMemoryStorageService
+} from "angular-webstorage-service";
 
 // key that is used to access the data in local storage
 const STORAGE_KEY = "local_User";
@@ -19,7 +22,8 @@ export class AppService {
     private httpClient: HttpClient,
     @Inject(SESSION_STORAGE) private storage: InMemoryStorageService
   ) {
-    this.apiUrl = "http://localhost:4000";
+    // this.apiUrl = "http://localhost:4000";
+    this.apiUrl = "192.241.129.214";
   }
 
   getArticles() {

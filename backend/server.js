@@ -23,10 +23,14 @@ Database Connection
 */
 
 // for database credentials, is part of .gitignore so must be created on deployment server manually
-var config = require('./config.js');
+var config = require("./config.js");
 
 var db = mongoose.connect(
-  "mongodb://" + config.username + ":" + config.password + "@ds135514.mlab.com:35514/nasdaq-articles-scrape-db",
+  "mongodb://" +
+    config.username +
+    ":" +
+    config.password +
+    "@ds135514.mlab.com:35514/nasdaq-articles-scrape-db",
   { useNewUrlParser: true }
 );
 
@@ -84,12 +88,12 @@ router.route("/getArticles").get((req, res) => {
       );
       // only allow new scrape if its' never been done since server restart
       // or if it has been at least 5 minutes since last scrape
-      if (
-        lastScrapeDate == null ||
-        moment(Date.now()).valueOf() - lastScrapeDate > 300000
-      ) {
-        scrapeLatest();
-      }
+      // if (
+      //   lastScrapeDate == null ||
+      //   moment(Date.now()).valueOf() - lastScrapeDate > 300000
+      // ) {
+      //   scrapeLatest();
+      // }
     }
   });
 });
@@ -116,7 +120,8 @@ router.route("/getNewArticles").get((req, res) => {
             })
           );
         });
-      } else { // if scrape has been done recently, send empty array since database was fetched on page load. 
+      } else {
+        // if scrape has been done recently, send empty array since database was fetched on page load.
         let emptyArray = [];
         res.json(emptyArray);
       }
@@ -145,7 +150,10 @@ router.route("/loginUser").post((req, res) => {
 });
 
 app.use("/", router);
-
+// viewed at http://localhost:8080
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
+});
 app.listen(port, () => console.log("Express server running on port", port));
 // ********************************************************************************
 
@@ -179,7 +187,10 @@ async function scrapeLatest() {
       timeout: 30000
     })
     .catch(err => {
-      console.log("Nav time took too long");
+      console.log("Options page took too long to load");
+      console.log("\n-- Web scrape complete --");
+      // browser.close();
+      // return;
     });
 
   // gets all 30 headlines
@@ -190,7 +201,7 @@ async function scrapeLatest() {
       ).map(res => res.innerHTML);
     })
     .catch(err => {
-      browser.close();
+      // browser.close();
       console.log(err);
     });
 
@@ -252,9 +263,7 @@ async function scrapeLatest() {
         timeout: 30000
       })
       .catch(err => {
-        console.log("Nav time took too long");
-        browser.close();
-        return;
+        console.log("Link navigation time took too long");
       });
 
     // gets article text

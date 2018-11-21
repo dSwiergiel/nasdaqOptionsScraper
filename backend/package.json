@@ -4,6 +4,7 @@
   "description": "This server will use web-scraping techniques to fetch data from nasdaq.com and will in a mongodb databse. This server will also handle all REST api calls from our frontend app.",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "babel-watch server.js"
   },
