@@ -22,8 +22,13 @@ const port = 4000;
 /*
 Database Connection
 */
+// var db = mongoose.connect(
+//   "mongodb://localhost:27017/nasdaqArticles",
+//   { useNewUrlParser: true }
+// );
+
 var db = mongoose.connect(
-  "mongodb://localhost:27017/nasdaqArticles",
+  "mongodb://dswiergiel:badpass123@ds135514.mlab.com:35514/nasdaq-articles-scrape-db",
   { useNewUrlParser: true }
 );
 

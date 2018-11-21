@@ -9,7 +9,8 @@ import { NavbarComponent } from "./navbar/navbar.component";
 import { MainComponent } from "./main/main.component";
 import { AppService } from "./app.service";
 import { Angular2CsvModule } from 'angular2-csv';
-
+import { StorageServiceModule} from 'angular-webstorage-service';
+ 
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
     // check to see if a user has been authenticated
-    if (this.appService.userAuthenticated) {
+    if (this.appService.getStorage() != null) {
       // if they are, return true and allow the user to load the articles component
       return true;
     }
@@ -44,6 +45,7 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     Angular2CsvModule,
+    StorageServiceModule,
     RouterModule.forRoot(routes, {
       useHash: false,
       scrollPositionRestoration: "enabled"
