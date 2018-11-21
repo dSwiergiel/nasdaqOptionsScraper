@@ -22,7 +22,7 @@ const port = 4000;
 Database Connection
 */
 
-// for database credentials, is part of .gitignore so must be created on deployment server manulally
+// for database credentials, is part of .gitignore so must be created on deployment server manually
 var config = require('./config.js');
 
 var db = mongoose.connect(
