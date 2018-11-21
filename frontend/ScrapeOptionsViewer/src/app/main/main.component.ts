@@ -50,6 +50,7 @@ export class MainComponent implements OnInit {
     this.fetchingScrape = true;
     this.alreadyScraped = false;
     this.finishedScrape = false;
+    this.generatingPDF = false;
 
     this.appService.getNewArticles().subscribe(
       (response: IArticle[]) => {
@@ -134,6 +135,9 @@ export class MainComponent implements OnInit {
 
   async exportPDF() {
     this.generatingPDF = true;
+    this.fetchingScrape = false;
+    this.alreadyScraped = false;
+    this.finishedScrape = false;
     let doc = new jsPDF("p", "mm", "a4");
     for (var i = 0; i < this.articles.length; i++) {
       let data = document.getElementById("article" + i);

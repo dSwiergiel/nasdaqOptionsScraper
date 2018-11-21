@@ -18,15 +18,11 @@ app.use(bodyParser.json());
 
 const port = 4000;
 // ********************************************************************************
-
 /*
 Database Connection
 */
-// var db = mongoose.connect(
-//   "mongodb://localhost:27017/nasdaqArticles",
-//   { useNewUrlParser: true }
-// );
 
+// for database credentials, is part of .gitignore so must be created on deployment server manulally
 var config = require('./config.js');
 
 var db = mongoose.connect(

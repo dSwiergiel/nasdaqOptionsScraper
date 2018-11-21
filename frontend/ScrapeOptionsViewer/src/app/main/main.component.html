@@ -148,7 +148,7 @@
                 ></div>
               </div>
             </div>
-            <div *ngIf="alreadyScraped" class=" mt-2">
+            <div *ngIf="alreadyScraped">
               <p style="margin-bottom: 0px;">
                 Results are up to date. A scrape was last performed
                 within the past 5 minutes.
@@ -161,7 +161,7 @@
               <p>Scrape complete! Latest results are shown below.</p>
             </div>
 
-            <div *ngIf="generatingPDF" class=" mt-2">
+            <div *ngIf="generatingPDF" >
               <p>Generating PDF. This may take some time.</p>
               <div class="progress mt-2 ">
                 <div
