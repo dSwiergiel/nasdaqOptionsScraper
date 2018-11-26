@@ -145,12 +145,12 @@ export class MainComponent implements OnInit {
         // let img = this.getBase64Image(canvas);
         // Few necessary setting options
         var imgWidth = 208;
-        var pageHeight = 295;
+        var pageHeight = 230;
         var imgHeight = (canvas.height * imgWidth) / canvas.width;
         var heightLeft = imgHeight;
         var position = 0;
         const contentDataURL = canvas.toDataURL("image/png");
-        doc.addImage(contentDataURL, "PNG", 0, position, imgWidth, 250);
+        doc.addImage(contentDataURL, "PNG", 0, position, imgWidth, pageHeight);
         doc.addPage();
       });
     }
