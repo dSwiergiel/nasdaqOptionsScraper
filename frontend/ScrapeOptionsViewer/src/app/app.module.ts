@@ -29,15 +29,11 @@ export class AuthGuard implements CanActivate {
 }
 
 const routes: Routes = [
-  {
-    path: "projects/nasdaqoptionsscraper/articles",
-    component: MainComponent,
-    canActivate: [AuthGuard]
-  },
-  // { path: "articles", component: MainComponent },
-  { path: "projects/nasdaqoptionsscraper/login", component: LoginComponent },
-  { path: "**", component: MainComponent, canActivate: [AuthGuard] },
-  { path: "", component: MainComponent, canActivate: [AuthGuard] }
+  { path: "articles", component: MainComponent, canActivate: [AuthGuard]},
+  // { path: "projects/nasdaqoptionsscraper/login", component: LoginComponent },
+  { path: "login", component: LoginComponent},
+  { path: "**", component: MainComponent, canActivate: [AuthGuard]},
+  { path: "", component: MainComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
