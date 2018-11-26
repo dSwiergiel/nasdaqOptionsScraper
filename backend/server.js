@@ -257,7 +257,7 @@ function Article(headline, url, stocks, text) {
 async function scrapeLatest() {
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
-  console.log("\n-- Web scrape started --");
+  console.log("\n-- Web scrape started at " +  moment(Date.now()).format("MM/DD/YY hh:mm A") + " --");
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox"]
@@ -390,7 +390,7 @@ async function scrapeLatest() {
     });
   }
 
-  console.log("\n-- Web scrape complete --");
+  console.log("\n-- Web scrape completed at " + moment(Date.now()).format("MM/DD/YY hh:mm A") + " --");
   browser.close();
   return;
 }
