@@ -234,6 +234,7 @@ app.post("/loginUser", (req, res) => {
   );
 });
 
+// catches the 404s, also handles fallback for angular routes since they don't actually exist, angular handles page routing.
 app.all("*", function(req, res) {
   res.sendFile(path.join(__dirname + "/dist/ScrapeOptionsViewer/index.html"));
 });
