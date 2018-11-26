@@ -162,7 +162,6 @@ app.get("/getArticles", (req, res) => {
 //   }
 // });
 
-
 // for full search which includes results from current scrape
 app.get("/getNewArticles", (req, res) => {
   // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
