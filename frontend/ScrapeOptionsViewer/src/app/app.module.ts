@@ -8,9 +8,8 @@ import { LoginComponent } from "./login/login.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { MainComponent } from "./main/main.component";
 import { AppService } from "./app.service";
-import { Angular2CsvModule } from 'angular2-csv';
-import { StorageServiceModule} from 'angular-webstorage-service';
- 
+import { Angular2CsvModule } from "angular2-csv";
+import { StorageServiceModule } from "angular-webstorage-service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -30,11 +29,15 @@ export class AuthGuard implements CanActivate {
 }
 
 const routes: Routes = [
-  { path: "projects/nasdaqoptionsscraper/articles", component: MainComponent, canActivate: [AuthGuard] },
+  {
+    path: "projects/nasdaqoptionsscraper/articles",
+    component: MainComponent,
+    canActivate: [AuthGuard]
+  },
   // { path: "articles", component: MainComponent },
   { path: "projects/nasdaqoptionsscraper/login", component: LoginComponent },
-  // { path: "**", component: LoginComponent },
-  // { path: "", component: LoginComponent }
+  { path: "**", component: MainComponent, canActivate: [AuthGuard] },
+  { path: "", component: MainComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
