@@ -78,22 +78,36 @@ Server REST Endpoints
 
 app.listen(port, () => console.log("Express server running on port", port));
 
-// app.use("/", express.static(path.join(__dirname, "/dist/ScrapeOptionsViewer")));
-// app.get("/", function(req, res) {
-//   res.sendFile(path.join(__dirname, "/dist/ScrapeOptionsViewer/index.html"));
-//   // next();
-//   // res.send('THIS IS A TEST')
-// });
-
 // Serve only the static files form the dist directory
 app.use(express.static(__dirname + "/dist/ScrapeOptionsViewer"));
 
-app.get("/*", function(req, res) {
-  res.sendFile(path.join(__dirname + "/dist/ScrapeOptionsViewer/index.html"));
-});
 
-// app.use("/", router);
-router.route("/getArticles").get((req, res) => {
+// router.route("/getArticles").get((req, res) => {
+//   ArticleModel.find((err, articles) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.json(
+//         // sort date from newest to oldest
+//         articles.sort(function(a, b) {
+//           a = new Date(a.scrapeDataStandard);
+//           b = new Date(b.scrapeDataStandard);
+//           return a > b ? -1 : a < b ? 1 : 0;
+//         })
+//       );
+//       // only allow new scrape if its' never been done since server restart
+//       // or if it has been at least 5 minutes since last scrape
+//       // if (
+//       //   lastScrapeDate == null ||
+//       //   moment(Date.now()).valueOf() - lastScrapeDate > 300000
+//       // ) {
+//       //   scrapeLatest();
+//       // }
+//     }
+//   });
+// });
+
+app.get("/getArticles", (req, res) => {
   ArticleModel.find((err, articles) => {
     if (err) {
       console.log(err);
@@ -118,8 +132,39 @@ router.route("/getArticles").get((req, res) => {
   });
 });
 
+// // for full search which includes results from current scrape
+// router.route("/getNewArticles").get((req, res) => {
+//   // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
+//   if (
+//     lastScrapeDate == null ||
+//     moment(Date.now()).valueOf() - lastScrapeDate > 300000
+//   ) {
+//     scrapeLatest().then(() => {
+//       ArticleModel.find((err, articles) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           res.json(
+//             // sort date from newest to oldest
+//             articles.sort(function(a, b) {
+//               a = new Date(a.scrapeDataStandard);
+//               b = new Date(b.scrapeDataStandard);
+//               return a > b ? -1 : a < b ? 1 : 0;
+//             })
+//           );
+//         }
+//       });
+//     });
+//   } else {
+//     // if scrape has been done recently, send empty array since database was fetched on page load.
+//     let emptyArray = [];
+//     res.json(emptyArray);
+//   }
+// });
+
+
 // for full search which includes results from current scrape
-router.route("/getNewArticles").get((req, res) => {
+app.get("/getNewArticles", (req, res) => {
   // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
   if (
     lastScrapeDate == null ||
@@ -147,41 +192,33 @@ router.route("/getNewArticles").get((req, res) => {
     res.json(emptyArray);
   }
 });
-// // for full search which includes results from current scrape
-// router.route("/getNewArticles").get((req, res) => {
-//   ArticleModel.find((err, articles) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       // only allow new scrape if its' never been done since server restart
-//       // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
-//       if (
-//         lastScrapeDate == null ||
-//         moment(Date.now()).valueOf() - lastScrapeDate > 300000
-//       ) {
-//         scrapeLatest().then(() => {
-//           res.json(
-//             // sort date from newest to oldest
-//             articles.sort(function(a, b) {
-//               a = new Date(a.scrapeDataStandard);
-//               b = new Date(b.scrapeDataStandard);
-//               return a > b ? -1 : a < b ? 1 : 0;
-//             })
-//           );
-//         });
+
+
+
+// NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
+// LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION.
+// NEVER STORE PLAIN TEXT OR SEND PLAIN TEXT FOR CREDENTIALS!!!!!!!
+// router.route("/loginUser").post((req, res) => {
+//   UserModel.findOne(
+//     { username: req.body.username, password: req.body.password },
+//     (err, user) => {
+//       if (err) {
+//         console.log(err);
 //       } else {
-//         // if scrape has been done recently, send empty array since database was fetched on page load.
-//         let emptyArray = [];
-//         res.json(emptyArray);
+//         if (user) {
+//           res.json("Success!");
+//         } else {
+//           res.json("Username or password is invalid!");
+//         }
 //       }
 //     }
-//   });
+//   );
 // });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
 // LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION.
 // NEVER STORE PLAIN TEXT OR SEND PLAIN TEXT FOR CREDENTIALS!!!!!!!
-router.route("/loginUser").post((req, res) => {
+app.post("/loginUser", (req, res) => {
   UserModel.findOne(
     { username: req.body.username, password: req.body.password },
     (err, user) => {
@@ -198,6 +235,9 @@ router.route("/loginUser").post((req, res) => {
   );
 });
 
+app.all("*", function(req, res) {
+  res.sendFile(path.join(__dirname + "/dist/ScrapeOptionsViewer/index.html"));
+});
 // ********************************************************************************
 
 /*

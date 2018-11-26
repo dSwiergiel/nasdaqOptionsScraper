@@ -22,8 +22,8 @@ export class AppService {
     private httpClient: HttpClient,
     @Inject(SESSION_STORAGE) private storage: InMemoryStorageService
   ) {
-    // this.apiUrl = "http://localhost:4000";
-    this.apiUrl = "http://192.241.129.214:4000";
+    this.apiUrl = "http://localhost:4000";
+    // this.apiUrl = "http://192.241.129.214:4000";
   }
 
   getArticles() {
