@@ -398,6 +398,7 @@ async function scrapeLatest() {
           " --"
       );
       browser.close();
+      return;
     }
   }
 
