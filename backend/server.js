@@ -382,7 +382,6 @@ async function scrapeLatest() {
         // error code 11000 is when it tried saving duplicate articles.
         // This is fine since we can't know when there will be from the scrape, we just won't add them.
         if (err.code == 11000) {
-
           isDup = true;
         } else {
           browser.close();
@@ -393,7 +392,12 @@ async function scrapeLatest() {
     });
     if (isDup == true) {
       console.log("reached results already archived, exiting scrape");
-      return;
+      console.log(
+        "\n-- Web scrape completed at " +
+          moment(Date.now()).format("MM/DD/YY hh:mm A") +
+          " --"
+      );
+      browser.close();
     }
   }
 
