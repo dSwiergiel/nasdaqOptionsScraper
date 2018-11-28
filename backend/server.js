@@ -81,7 +81,6 @@ app.listen(port, () => console.log("Express server running on port", port));
 // Serve only the static files form the dist directory
 app.use(express.static(__dirname + "/dist/ScrapeOptionsViewer"));
 
-
 // router.route("/getArticles").get((req, res) => {
 //   ArticleModel.find((err, articles) => {
 //     if (err) {
@@ -192,8 +191,6 @@ app.get("/getNewArticles", (req, res) => {
   }
 });
 
-
-
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
 // LIKE SERIOUSLY, THIS IS A REALLY BAD WAY TO DO LOGIN AND AUTHENTICATION.
 // NEVER STORE PLAIN TEXT OR SEND PLAIN TEXT FOR CREDENTIALS!!!!!!!
@@ -252,12 +249,17 @@ function Article(headline, url, stocks, text) {
   this.scrapeDate = moment(Date.now()).format("MM/DD/YY hh:mm A");
   this.scrapeDataStandard = moment(Date.now()).valueOf();
 }
+var isDup = false;
 
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
 async function scrapeLatest() {
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
-  console.log("\n-- Web scrape started at " +  moment(Date.now()).format("MM/DD/YY hh:mm A") + " --");
+  console.log(
+    "\n-- Web scrape started at " +
+      moment(Date.now()).format("MM/DD/YY hh:mm A") +
+      " --"
+  );
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox"]
@@ -373,7 +375,6 @@ async function scrapeLatest() {
     }
 
     console.log(article);
-
     // adds the article object to the database
     let a = new ArticleModel(article);
     a.save(function(err, a) {
@@ -381,6 +382,8 @@ async function scrapeLatest() {
         // error code 11000 is when it tried saving duplicate articles.
         // This is fine since we can't know when there will be from the scrape, we just won't add them.
         if (err.code == 11000) {
+
+          isDup = true;
         } else {
           browser.close();
 
@@ -388,9 +391,17 @@ async function scrapeLatest() {
         }
       }
     });
+    if (isDup == true) {
+      console.log("reached results already archived, exiting scrape");
+      return;
+    }
   }
 
-  console.log("\n-- Web scrape completed at " + moment(Date.now()).format("MM/DD/YY hh:mm A") + " --");
+  console.log(
+    "\n-- Web scrape completed at " +
+      moment(Date.now()).format("MM/DD/YY hh:mm A") +
+      " --"
+  );
   browser.close();
   return;
 }
