@@ -249,10 +249,11 @@ function Article(headline, url, stocks, text) {
   this.scrapeDate = moment(Date.now()).format("MM/DD/YY hh:mm A");
   this.scrapeDataStandard = moment(Date.now()).valueOf();
 }
-var isDup = false;
 
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
 async function scrapeLatest() {
+  var isDup = false;
+
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
   console.log(
