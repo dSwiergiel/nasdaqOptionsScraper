@@ -391,16 +391,16 @@ async function scrapeLatest() {
         }
       }
     });
-    if (isDup == true) {
-      console.log("reached results already archived, exiting scrape");
-      console.log(
-        "\n-- Web scrape completed at " +
-          moment(Date.now()).format("MM/DD/YY hh:mm A") +
-          " --"
-      );
-      browser.close();
-      return;
-    }
+    // if (isDup == true) {
+    //   console.log("reached results already archived, exiting scrape");
+    //   console.log(
+    //     "\n-- Web scrape completed at " +
+    //       moment(Date.now()).format("MM/DD/YY hh:mm A") +
+    //       " --"
+    //   );
+    //   browser.close();
+    //   return;
+    // }
   }
 
   console.log(
