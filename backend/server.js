@@ -281,6 +281,7 @@ async function scrapeLatest() {
     .catch(err => {
       console.log("Options page took too long to load");
       console.log("\n-- Web scrape complete --");
+      currentlyScraping = false;
       // browser.close();
       // return;
     });
@@ -294,6 +295,7 @@ async function scrapeLatest() {
     })
     .catch(err => {
       // browser.close();
+      currentlyScraping = false;
       console.log(err);
     });
 
