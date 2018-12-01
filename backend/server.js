@@ -317,11 +317,20 @@ async function scrapeLatest() {
         .find("a")
         .attr("href");
 
-      // creates a new article object
-      let newArticle = new Article(h, u, null, null);
+     await ArticleModel.findOne({ headline: h }, "headline", function(err, article) {
+        if (err) return handleError(err);
 
-      // pushes to array
-      articles.push(newArticle);
+        if (article) {
+          console.log("Already in database:", article.headline);
+          // return;
+        } else {
+          // creates a new article object
+          let newArticle = new Article(h, u, null, null);
+
+          // pushes to array
+          articles.push(newArticle);
+        }
+      });
     }
   }
 
