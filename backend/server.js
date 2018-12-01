@@ -171,20 +171,18 @@ app.get("/getNewArticles", (req, res) => {
   // ) {
 
   if (!currentlyScraping) {
-    
-  scrapeLatest().then(() => {
-      ArticleModel.find({}, (err, articles) => {
+    scrapeLatest().then(() => {
+      ArticleModel.find({}, (err, articlesResponse) => {
         if (err) {
           console.log(err);
         } else {
-          res.json(
-            // sort date from newest to oldest
-            articles.sort(function(a, b) {
-              a = new Date(a.scrapeDataStandard);
-              b = new Date(b.scrapeDataStandard);
-              return a > b ? -1 : a < b ? 1 : 0;
-            })
-          );
+          // sort date from newest to oldest
+          articlesResponse.sort(function(a, b) {
+            a = new Date(a.scrapeDataStandard);
+            b = new Date(b.scrapeDataStandard);
+            return a > b ? -1 : a < b ? 1 : 0;
+          });
+          res.json(articlesResponse);
         }
       });
     });
@@ -265,11 +263,16 @@ async function scrapeLatest() {
       moment(Date.now()).format("MM/DD/YY hh:mm A") +
       " --"
   );
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox"]
-  });
-  const page = await browser.newPage();
+
+  const browser = await puppeteer
+    .launch({
+      headless: true,
+      args: ["--no-sandbox"]
+    })
+    .catch(err => console.log(err));
+
+  await delay(1000);
+  const page = await browser.newPage().catch(err => console.log(err));
 
   lastScrapeDate = moment(Date.now()).valueOf();
 
@@ -286,7 +289,6 @@ async function scrapeLatest() {
       // browser.close();
       // return;
     });
-
   // gets all 30 headlines
   var links = await page
     .evaluate(() => {
@@ -299,10 +301,10 @@ async function scrapeLatest() {
       currentlyScraping = false;
       console.log(err);
     });
-    
+
   // filters headlines to ones that include "Notable" or "Noteworthy"
   for (let link of links) {
-    var $ = await cheerio.load(link);
+    var $ = cheerio.load(link);
 
     if (
       ($("b")
@@ -372,7 +374,6 @@ async function scrapeLatest() {
       .catch(err => {
         console.log("Link navigation time took too long");
         currentlyScraping = false;
-
       });
 
     // gets article text
@@ -383,7 +384,6 @@ async function scrapeLatest() {
       .catch(err => {
         console.log("Link navigation time took too long");
         currentlyScraping = false;
-
       });
 
     // splits article text by each mention of the stocks in the headline
@@ -404,18 +404,20 @@ async function scrapeLatest() {
     console.log(article);
     // adds the article object to the database
     let a = new ArticleModel(article);
-    await a.save(function(err, a) {
-      if (err) {
-        // error code 11000 is when it tried saving duplicate articles.
-        // This is fine since we can't know when there will be from the scrape, we just won't add them.
-        if (err.code == 11000) {
-        } else {
-          browser.close();
-          currentlyScraping = false;
-          console.log(err);
-        }
-      }
-    });
+
+    await ArticleModel.collection.insertOne(a);
+    // await a.save(function(err, a) {
+    //   if (err) {
+    //     // error code 11000 is when it tried saving duplicate articles.
+    //     // This is fine since we can't know when there will be from the scrape, we just won't add them.
+    //     if (err.code == 11000) {
+    //     } else {
+    //       browser.close();
+    //       currentlyScraping = false;
+    //       console.log(err);
+    //     }
+    //   }
+    // });
   }
 
   console.log(
@@ -423,7 +425,14 @@ async function scrapeLatest() {
       moment(Date.now()).format("MM/DD/YY hh:mm A") +
       " --"
   );
+
   currentlyScraping = false;
   browser.close();
   return;
+}
+
+function delay(time) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, time);
+  });
 }
