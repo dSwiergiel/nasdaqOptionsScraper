@@ -70,6 +70,7 @@ const url = "https://www.nasdaq.com/options/";
 
 var articles = [];
 var lastScrapeDate = null;
+var currentlyScraping = false;
 // scrapeLatest();
 
 /*
@@ -168,6 +169,8 @@ app.get("/getNewArticles", (req, res) => {
   //   lastScrapeDate == null ||
   //   moment(Date.now()).valueOf() - lastScrapeDate > 300000
   // ) {
+
+  if (!currentlyScraping) {
     scrapeLatest().then(() => {
       ArticleModel.find((err, articles) => {
         if (err) {
@@ -184,11 +187,11 @@ app.get("/getNewArticles", (req, res) => {
         }
       });
     });
-  // } else {
-  //   // if scrape has been done recently, send empty array since database was fetched on page load.
-  //   let emptyArray = [];
-  //   res.json(emptyArray);
-  // }
+  } else {
+    // if scrape has been done recently, send empty array since database was fetched on page load.
+    let emptyArray = [];
+    res.json(emptyArray);
+  }
 });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
@@ -252,6 +255,7 @@ function Article(headline, url, stocks, text) {
 
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
 async function scrapeLatest() {
+  currentlyScraping = true;
 
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
@@ -316,7 +320,10 @@ async function scrapeLatest() {
         .find("a")
         .attr("href");
 
-     await ArticleModel.findOne({ headline: h }, "headline", function(err, article) {
+      await ArticleModel.findOne({ headline: h }, "headline", function(
+        err,
+        article
+      ) {
         if (err) return handleError(err);
 
         if (article) {
@@ -393,7 +400,7 @@ async function scrapeLatest() {
         if (err.code == 11000) {
         } else {
           browser.close();
-
+          currentlyScraping = false;
           console.log(err);
         }
       }
@@ -405,6 +412,7 @@ async function scrapeLatest() {
       moment(Date.now()).format("MM/DD/YY hh:mm A") +
       " --"
   );
+  currentlyScraping = false;
   browser.close();
   return;
 }
