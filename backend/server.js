@@ -299,7 +299,7 @@ async function scrapeLatest() {
       currentlyScraping = false;
       console.log(err);
     });
-console.log(articles);
+    
   // filters headlines to ones that include "Notable" or "Noteworthy"
   for (let link of links) {
     var $ = await cheerio.load(link);
@@ -342,7 +342,6 @@ console.log(articles);
       });
     }
   }
-  console.log(articles);
 
   // gets stock symbols from headline, splits them, then adds to each article object
   for (let article of articles) {
