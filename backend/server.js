@@ -171,8 +171,9 @@ app.get("/getNewArticles", (req, res) => {
   // ) {
 
   if (!currentlyScraping) {
-    scrapeLatest().then(() => {
-      ArticleModel.find((err, articles) => {
+    
+  scrapeLatest().then(() => {
+      ArticleModel.find({}, (err, articles) => {
         if (err) {
           console.log(err);
         } else {
@@ -256,7 +257,7 @@ function Article(headline, url, stocks, text) {
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
 async function scrapeLatest() {
   currentlyScraping = true;
-
+  articles = [];
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
   console.log(
@@ -298,10 +299,10 @@ async function scrapeLatest() {
       currentlyScraping = false;
       console.log(err);
     });
-
+console.log(articles);
   // filters headlines to ones that include "Notable" or "Noteworthy"
   for (let link of links) {
-    var $ = cheerio.load(link);
+    var $ = await cheerio.load(link);
 
     if (
       ($("b")
@@ -341,6 +342,7 @@ async function scrapeLatest() {
       });
     }
   }
+  console.log(articles);
 
   // gets stock symbols from headline, splits them, then adds to each article object
   for (let article of articles) {
@@ -370,12 +372,20 @@ async function scrapeLatest() {
       })
       .catch(err => {
         console.log("Link navigation time took too long");
+        currentlyScraping = false;
+
       });
 
     // gets article text
-    var articleText = await page.evaluate(() => {
-      return document.getElementById("articleText").innerText.trim();
-    });
+    var articleText = await page
+      .evaluate(() => {
+        return document.getElementById("articleText").innerText.trim();
+      })
+      .catch(err => {
+        console.log("Link navigation time took too long");
+        currentlyScraping = false;
+
+      });
 
     // splits article text by each mention of the stocks in the headline
     var symbolText = articleText.split("(Symbol: ");
@@ -395,7 +405,7 @@ async function scrapeLatest() {
     console.log(article);
     // adds the article object to the database
     let a = new ArticleModel(article);
-    a.save(function(err, a) {
+    await a.save(function(err, a) {
       if (err) {
         // error code 11000 is when it tried saving duplicate articles.
         // This is fine since we can't know when there will be from the scrape, we just won't add them.
