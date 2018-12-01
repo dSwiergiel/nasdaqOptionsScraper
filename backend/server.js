@@ -164,10 +164,10 @@ app.get("/getArticles", (req, res) => {
 // for full search which includes results from current scrape
 app.get("/getNewArticles", (req, res) => {
   // or if it has been at least 5 minutes since last scrape. Else, send content stored in database
-  if (
-    lastScrapeDate == null ||
-    moment(Date.now()).valueOf() - lastScrapeDate > 300000
-  ) {
+  // if (
+  //   lastScrapeDate == null ||
+  //   moment(Date.now()).valueOf() - lastScrapeDate > 300000
+  // ) {
     scrapeLatest().then(() => {
       ArticleModel.find((err, articles) => {
         if (err) {
@@ -184,11 +184,11 @@ app.get("/getNewArticles", (req, res) => {
         }
       });
     });
-  } else {
-    // if scrape has been done recently, send empty array since database was fetched on page load.
-    let emptyArray = [];
-    res.json(emptyArray);
-  }
+  // } else {
+  //   // if scrape has been done recently, send empty array since database was fetched on page load.
+  //   let emptyArray = [];
+  //   res.json(emptyArray);
+  // }
 });
 
 // NOT REAL USER AUTHENTICATION AT ALL!!! JUST A SIMPLE PLAIN TEXT LOGIN FOR DEMONSTRATION PURPOSES.
@@ -252,7 +252,6 @@ function Article(headline, url, stocks, text) {
 
 // Function to scrape latest headlines and the desired content from nasdaq.com/options
 async function scrapeLatest() {
-  var isDup = false;
 
   // headless lets it run without opening a browser and displaying what it's doing.
   //It will just do what it should in the background
@@ -392,7 +391,6 @@ async function scrapeLatest() {
         // error code 11000 is when it tried saving duplicate articles.
         // This is fine since we can't know when there will be from the scrape, we just won't add them.
         if (err.code == 11000) {
-          isDup = true;
         } else {
           browser.close();
 
@@ -400,16 +398,6 @@ async function scrapeLatest() {
         }
       }
     });
-    // if (isDup == true) {
-    //   console.log("reached results already archived, exiting scrape");
-    //   console.log(
-    //     "\n-- Web scrape completed at " +
-    //       moment(Date.now()).format("MM/DD/YY hh:mm A") +
-    //       " --"
-    //   );
-    //   browser.close();
-    //   return;
-    // }
   }
 
   console.log(
